@@ -206,18 +206,45 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
+// Helper for LocalStorage
+const loadFromStorage = <T,>(key: string, initial: T): T => {
+    try {
+        const item = window.localStorage.getItem(key);
+        return item ? JSON.parse(item) : initial;
+    } catch (error) {
+        console.error("Error reading from localStorage", error);
+        return initial;
+    }
+};
+
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [jobs, setJobs] = useState<Job[]>(MOCK_JOBS);
+  // Initialize state from LocalStorage to persist data across refreshes
+  const [currentUser, setCurrentUser] = useState<User | null>(() => loadFromStorage('gabondev_user', null));
+  const [developers, setDevelopers] = useState<Developer[]>(() => loadFromStorage('gabondev_developers', INITIAL_DEVS));
+  const [jobs, setJobs] = useState<Job[]>(() => loadFromStorage('gabondev_jobs', MOCK_JOBS));
+  const [transactions, setTransactions] = useState<Transaction[]>(() => loadFromStorage('gabondev_transactions', MOCK_TRANSACTIONS));
+  
+  // Mock data that doesn't need heavy persistence for this demo, but good to have
   const [proposals, setProposals] = useState<Proposal[]>(MOCK_PROPOSALS);
-  const [developers, setDevelopers] = useState<Developer[]>(INITIAL_DEVS);
   const [notifications, setNotifications] = useState<Notification[]>(MOCK_NOTIFICATIONS);
   const [conversations, setConversations] = useState<Conversation[]>(MOCK_CONVERSATIONS);
   const [messages, setMessages] = useState<Message[]>(MOCK_MESSAGES);
-  const [transactions, setTransactions] = useState<Transaction[]>(MOCK_TRANSACTIONS);
   
   // Custom Router State
   const [currentPath, setCurrentPath] = useState(window.location.hash.substring(1) || '/');
+
+  // Persistence Effects
+  useEffect(() => {
+      window.localStorage.setItem('gabondev_user', JSON.stringify(currentUser));
+  }, [currentUser]);
+
+  useEffect(() => {
+      window.localStorage.setItem('gabondev_developers', JSON.stringify(developers));
+  }, [developers]);
+
+  useEffect(() => {
+    window.localStorage.setItem('gabondev_jobs', JSON.stringify(jobs));
+  }, [jobs]);
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -253,12 +280,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
           userId: userId === 'all' ? 'all' : userId
       };
       
-      if (userId === 'all') {
-          // In a real app, this would be handled by backend. Here we just add to array but UI needs to filter correctly
-          setNotifications(prev => [newNotif, ...prev]);
-      } else {
-          setNotifications(prev => [newNotif, ...prev]);
-      }
+      setNotifications(prev => [newNotif, ...prev]);
   };
 
   const sendMessage = (content: string) => {
@@ -374,7 +396,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
             balance: 0,
             isBlocked: false
         };
-        setDevelopers([...developers, newDevEntry]);
+        setDevelopers(prev => [...prev, newDevEntry]);
         navigate('/jobs');
     } else {
         navigate('/dashboard');
@@ -383,6 +405,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   const logout = () => {
     setCurrentUser(null);
+    window.localStorage.removeItem('gabondev_user'); // Explicit clear
     navigate('/');
   };
 
