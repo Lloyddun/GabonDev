@@ -1,33 +1,358 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GabonDev - Freelance Développeurs Gabon</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GabonDev - Plateforme Freelance Gabon</title>
+    
+    <!-- Tailwind CSS (CDN) -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons (CDN) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
-      body {
-        font-family: 'Inter', sans-serif;
-      }
+        body { font-family: 'Inter', sans-serif; }
+        .page-section { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .page-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .nav-link.active { color: #059669; font-weight: 600; }
     </style>
-  <script type="importmap">
+<script type="importmap">
 {
   "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/",
     "@google/genai": "https://esm.sh/@google/genai@^1.37.0",
+    "react": "https://esm.sh/react@^19.2.3",
     "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
-    "firebase/": "https://esm.sh/firebase@^12.8.0/",
-    "vite": "https://esm.sh/vite@^7.3.1",
-    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "firebase/": "https://esm.sh/firebase@^12.8.0/"
   }
 }
 </script>
 </head>
-  <body class="bg-slate-50 text-slate-900">
-    <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
-  </body>
+<body class="bg-slate-50 text-slate-900 flex flex-col min-h-screen">
+
+    <!-- NAVIGATION -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center cursor-pointer" onclick="router('home')">
+                    <i data-lucide="code-2" class="h-8 w-8 text-emerald-600 mr-2"></i>
+                    <span class="font-bold text-xl tracking-tight">GabonDev</span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8 items-center">
+                    <button onclick="router('home')" class="nav-link text-slate-600 hover:text-emerald-600">Accueil</button>
+                    <button onclick="router('developers')" class="nav-link text-slate-600 hover:text-emerald-600">Trouver un Dev</button>
+                    <button onclick="router('jobs')" class="nav-link text-slate-600 hover:text-emerald-600">Missions</button>
+                    <button onclick="router('pricing')" class="nav-link text-slate-600 hover:text-emerald-600">Tarifs</button>
+                </div>
+
+                <div class="hidden md:flex items-center space-x-4">
+                    <button onclick="router('login')" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-slate-900 rounded-md hover:bg-slate-800 transition-colors">
+                        <i data-lucide="log-in" class="h-4 w-4"></i> Connexion
+                    </button>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button onclick="toggleMobileMenu()" class="text-slate-500 hover:text-slate-900">
+                        <i data-lucide="menu" class="h-6 w-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 p-4 space-y-2">
+            <button onclick="router('home')" class="block w-full text-left px-4 py-2 text-slate-700 hover:bg-slate-50">Accueil</button>
+            <button onclick="router('developers')" class="block w-full text-left px-4 py-2 text-slate-700 hover:bg-slate-50">Développeurs</button>
+            <button onclick="router('jobs')" class="block w-full text-left px-4 py-2 text-slate-700 hover:bg-slate-50">Missions</button>
+            <button onclick="router('login')" class="block w-full text-left px-4 py-2 font-bold text-emerald-600">Connexion</button>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main id="app" class="flex-grow">
+        
+        <!-- PAGE: HOME -->
+        <section id="home" class="page-section active">
+            <!-- Hero -->
+            <div class="relative bg-slate-900 py-24 overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-r from-slate-900 to-emerald-900 opacity-90"></div>
+                <div class="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1950&q=80')] bg-cover bg-center"></div>
+                
+                <div class="relative max-w-4xl mx-auto px-4 text-center">
+                    <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-6">
+                        Trouvez le freelance idéal au <span class="text-emerald-400">Gabon</span>
+                    </h1>
+                    <p class="text-xl text-slate-300 mb-10">
+                        Développement Web, Mobile, Design... Plus de 500 talents gabonais prêts à travailler. Paiement sécurisé via Airtel/Wave.
+                    </p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button onclick="router('developers')" class="bg-emerald-500 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-emerald-600 transition-colors">
+                            Trouver un expert
+                        </button>
+                        <button onclick="router('jobs')" class="border border-white text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-white hover:text-slate-900 transition-colors">
+                            Voir les offres
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categories -->
+            <div class="py-16 bg-white">
+                <div class="max-w-7xl mx-auto px-4">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-10 text-center">Catégories Populaires</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div class="p-6 bg-slate-50 rounded-xl text-center hover:shadow-md transition cursor-pointer" onclick="router('developers')">
+                            <i data-lucide="code" class="h-10 w-10 text-indigo-500 mx-auto mb-3"></i>
+                            <h3 class="font-bold">Web Fullstack</h3>
+                        </div>
+                        <div class="p-6 bg-slate-50 rounded-xl text-center hover:shadow-md transition cursor-pointer" onclick="router('developers')">
+                            <i data-lucide="smartphone" class="h-10 w-10 text-emerald-500 mx-auto mb-3"></i>
+                            <h3 class="font-bold">Mobile Apps</h3>
+                        </div>
+                        <div class="p-6 bg-slate-50 rounded-xl text-center hover:shadow-md transition cursor-pointer" onclick="router('developers')">
+                            <i data-lucide="shopping-cart" class="h-10 w-10 text-purple-500 mx-auto mb-3"></i>
+                            <h3 class="font-bold">E-commerce</h3>
+                        </div>
+                        <div class="p-6 bg-slate-50 rounded-xl text-center hover:shadow-md transition cursor-pointer" onclick="router('developers')">
+                            <i data-lucide="palette" class="h-10 w-10 text-pink-500 mx-auto mb-3"></i>
+                            <h3 class="font-bold">Design UI/UX</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE: DEVELOPERS -->
+        <section id="developers" class="page-section">
+            <div class="py-12 px-4 max-w-7xl mx-auto">
+                <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Nos meilleurs talents</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="dev-grid">
+                    <!-- Devs injected via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE: JOBS -->
+        <section id="jobs" class="page-section">
+            <div class="py-12 px-4 max-w-7xl mx-auto">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-3xl font-bold text-slate-900">Dernières Missions</h2>
+                    <button onclick="alert('Connectez-vous pour publier')" class="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-bold">Publier un projet</button>
+                </div>
+                <div class="space-y-4" id="job-list">
+                    <!-- Jobs injected via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE: PRICING -->
+        <section id="pricing" class="page-section">
+            <div class="py-20 px-4 max-w-7xl mx-auto text-center">
+                <h2 class="text-4xl font-bold text-slate-900 mb-4">Abonnements Freelance</h2>
+                <p class="text-slate-600 mb-12">Passez Pro pour décrocher plus de contrats.</p>
+                
+                <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                    <!-- Free -->
+                    <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
+                        <h3 class="text-xl font-bold">Standard</h3>
+                        <div class="text-4xl font-bold my-4">Gratuit</div>
+                        <ul class="space-y-3 text-sm text-left mb-8">
+                            <li class="flex gap-2"><i data-lucide="check" class="text-emerald-500 w-4 h-4"></i> Profil basique</li>
+                            <li class="flex gap-2"><i data-lucide="check" class="text-emerald-500 w-4 h-4"></i> 3 candidatures / mois</li>
+                        </ul>
+                        <button class="w-full py-3 bg-slate-100 font-bold rounded-lg">Actuel</button>
+                    </div>
+                    
+                    <!-- Pro -->
+                    <div class="bg-white p-8 rounded-2xl border-2 border-emerald-500 shadow-xl relative transform scale-105">
+                        <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-emerald-600 text-white px-3 py-1 rounded-full text-xs font-bold">RECOMMANDÉ</div>
+                        <h3 class="text-xl font-bold flex items-center justify-center gap-2"><i data-lucide="crown" class="w-5 h-5 text-yellow-500"></i> Premium</h3>
+                        <div class="text-4xl font-bold my-4">5 000 <span class="text-sm font-normal text-slate-500">FCFA/mois</span></div>
+                        <ul class="space-y-3 text-sm text-left mb-8">
+                            <li class="flex gap-2"><i data-lucide="check" class="text-emerald-500 w-4 h-4"></i> Profil "Vérifié"</li>
+                            <li class="flex gap-2"><i data-lucide="check" class="text-emerald-500 w-4 h-4"></i> Candidatures illimitées</li>
+                            <li class="flex gap-2"><i data-lucide="check" class="text-emerald-500 w-4 h-4"></i> Commission réduite</li>
+                        </ul>
+                        <button onclick="alert('Paiement via Airtel Money bientôt disponible')" class="w-full py-3 bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-700">Choisir</button>
+                    </div>
+
+                    <!-- Agency -->
+                    <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
+                        <h3 class="text-xl font-bold">Agence</h3>
+                        <div class="text-4xl font-bold my-4">15 000 <span class="text-sm font-normal text-slate-500">FCFA/mois</span></div>
+                        <ul class="space-y-3 text-sm text-left mb-8">
+                            <li class="flex gap-2"><i data-lucide="check" class="text-emerald-500 w-4 h-4"></i> Multi-comptes</li>
+                            <li class="flex gap-2"><i data-lucide="check" class="text-emerald-500 w-4 h-4"></i> Support dédié</li>
+                        </ul>
+                        <button class="w-full py-3 bg-slate-900 text-white font-bold rounded-lg hover:bg-slate-800">Contacter</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE: LOGIN -->
+        <section id="login" class="page-section">
+            <div class="min-h-[60vh] flex items-center justify-center px-4">
+                <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md border border-slate-100">
+                    <h2 class="text-2xl font-bold text-center mb-6">Connexion</h2>
+                    <form onsubmit="event.preventDefault(); router('home'); alert('Connexion réussie (Simulation)');">
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium mb-1">Email</label>
+                            <input type="email" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="votre@email.com">
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium mb-1">Mot de passe</label>
+                            <input type="password" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="••••••••">
+                        </div>
+                        <button type="submit" class="w-full bg-slate-900 text-white py-3 rounded-lg font-bold hover:bg-slate-800">Se connecter</button>
+                    </form>
+                    <p class="text-center mt-4 text-sm text-slate-500">Pas encore de compte ? <a href="#" class="text-emerald-600 font-bold">S'inscrire</a></p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-300 py-12 border-t border-slate-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-8">
+            <div>
+                <div class="flex items-center gap-2 text-white mb-4">
+                    <i data-lucide="code-2" class="h-6 w-6 text-emerald-500"></i>
+                    <span class="font-bold text-lg">GabonDev</span>
+                </div>
+                <p class="text-sm text-slate-500">La plateforme n°1 pour les développeurs au Gabon.</p>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4">Liens</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" onclick="router('home')" class="hover:text-emerald-500">Accueil</a></li>
+                    <li><a href="#" onclick="router('jobs')" class="hover:text-emerald-500">Missions</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4">Légal</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="hover:text-emerald-500">CGU</a></li>
+                    <li><a href="#" class="hover:text-emerald-500">Confidentialité</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4">Contact</h4>
+                <p class="text-sm flex gap-2 items-center mb-2"><i data-lucide="map-pin" class="w-4 h-4"></i> Libreville, Gabon</p>
+                <p class="text-sm flex gap-2 items-center"><i data-lucide="mail" class="w-4 h-4"></i> contact@gabondev.ga</p>
+            </div>
+        </div>
+        <div class="text-center text-sm text-slate-600 mt-10 pt-4 border-t border-slate-800">
+            © 2025 GabonDev. Fait avec passion.
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // MOCK DATA
+        const developers = [
+            { name: "Jean-Marc O.", role: "Développeur Fullstack", rate: "15 000", skills: ["React", "Node.js", "PHP"], img: "https://i.pravatar.cc/150?u=1", verified: true },
+            { name: "Sarah B.", role: "Designer UI/UX", rate: "12 000", skills: ["Figma", "Webflow"], img: "https://i.pravatar.cc/150?u=5", verified: true },
+            { name: "Paul M.", role: "Dev Mobile Flutter", rate: "18 000", skills: ["Flutter", "Dart", "Firebase"], img: "https://i.pravatar.cc/150?u=3", verified: false },
+            { name: "Eric K.", role: "Expert WordPress", rate: "10 000", skills: ["WordPress", "Elementor"], img: "https://i.pravatar.cc/150?u=8", verified: true },
+            { name: "Marc A.", role: "Dev Backend Python", rate: "20 000", skills: ["Django", "Python", "SQL"], img: "https://i.pravatar.cc/150?u=12", verified: false },
+        ];
+
+        const jobs = [
+            { title: "Création Site E-commerce", company: "Mode Gabon", budget: "500k - 1M FCFA", tags: ["WooCommerce", "PHP"], date: "Il y a 2j" },
+            { title: "App de Gestion Stock PME", company: "Logistique GA", budget: "800k - 1.5M FCFA", tags: ["React", "Node.js"], date: "Il y a 4h" },
+            { title: "Refonte Site Vitrine", company: "BTP Services", budget: "200k - 400k FCFA", tags: ["HTML/CSS", "SEO"], date: "Hier" },
+        ];
+
+        // RENDER FUNCTIONS
+        function renderDevs() {
+            const container = document.getElementById('dev-grid');
+            container.innerHTML = developers.map(dev => `
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-md transition">
+                    <div class="flex items-center gap-4 mb-4">
+                        <img src="${dev.img}" class="w-14 h-14 rounded-full object-cover">
+                        <div>
+                            <h4 class="font-bold text-slate-900 flex items-center gap-1">
+                                ${dev.name} 
+                                ${dev.verified ? '<i data-lucide="shield-check" class="w-4 h-4 text-emerald-500 fill-emerald-100"></i>' : ''}
+                            </h4>
+                            <p class="text-sm text-slate-500">${dev.role}</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        ${dev.skills.map(s => `<span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded">${s}</span>`).join('')}
+                    </div>
+                    <div class="flex justify-between items-center pt-3 border-t border-slate-100">
+                        <span class="font-bold">${dev.rate} FCFA<span class="text-xs font-normal">/h</span></span>
+                        <button class="text-emerald-600 text-sm font-bold hover:underline">Voir profil</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderJobs() {
+            const container = document.getElementById('job-list');
+            container.innerHTML = jobs.map(job => `
+                <div class="bg-white rounded-lg p-6 shadow-sm border border-slate-200 hover:border-emerald-300 transition cursor-pointer">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-lg font-bold text-emerald-700 mb-1">${job.title}</h3>
+                            <p class="text-slate-600 text-sm mb-3">${job.company} • ${job.date}</p>
+                            <div class="flex gap-2">
+                                ${job.tags.map(t => `<span class="bg-emerald-50 text-emerald-700 border border-emerald-100 px-2 py-1 rounded text-xs font-medium">${t}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-bold text-slate-900">${job.budget}</div>
+                            <button class="mt-2 bg-slate-900 text-white text-xs px-3 py-1.5 rounded hover:bg-slate-700">Postuler</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ROUTER SYSTEM
+        function router(pageId) {
+            // Hide all sections
+            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+            
+            // Show target section
+            const target = document.getElementById(pageId) || document.getElementById('home');
+            target.classList.add('active');
+
+            // Close mobile menu if open
+            document.getElementById('mobile-menu').classList.add('hidden');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+
+            // Re-initialize icons for new content
+            lucide.createIcons();
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        // INIT
+        window.addEventListener('DOMContentLoaded', () => {
+            renderDevs();
+            renderJobs();
+            lucide.createIcons();
+            
+            // Handle URL hash if present
+            /*const hash = window.location.hash.substring(1);
+            if(hash) router(hash);*/
+        });
+
+    </script>
+</body>
 </html>
