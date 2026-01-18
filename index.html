@@ -5,21 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GabonDev - Plateforme Freelance Gabon</title>
     
-    <!-- Tailwind CSS (CDN) -->
+    <!-- Tailwind CSS (CDN pour le style) -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Lucide Icons (CDN) -->
+    <!-- Lucide Icons (CDN pour les icônes) -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         body { font-family: 'Inter', sans-serif; }
-        .page-section { display: none; animation: fadeIn 0.3s ease-in-out; }
-        .page-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* Animation simple pour le changement de page */
+        .page-section { display: none; opacity: 0; transition: opacity 0.3s ease-in; }
+        .page-section.active { display: block; opacity: 1; }
+        
+        /* Style des liens de navigation */
         .nav-link.active { color: #059669; font-weight: 600; }
+        
+        /* Styles personnalisés pour les cartes */
+        .dev-card:hover { transform: translateY(-2px); }
     </style>
 <script type="importmap">
 {
@@ -35,65 +40,70 @@
 </head>
 <body class="bg-slate-50 text-slate-900 flex flex-col min-h-screen">
 
-    <!-- NAVIGATION -->
+    <!-- BARRE DE NAVIGATION -->
     <nav class="bg-white shadow-sm sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
+                <!-- Logo -->
                 <div class="flex items-center cursor-pointer" onclick="router('home')">
                     <i data-lucide="code-2" class="h-8 w-8 text-emerald-600 mr-2"></i>
                     <span class="font-bold text-xl tracking-tight">GabonDev</span>
                 </div>
                 
-                <!-- Desktop Menu -->
+                <!-- Menu Ordinateur -->
                 <div class="hidden md:flex space-x-8 items-center">
-                    <button onclick="router('home')" class="nav-link text-slate-600 hover:text-emerald-600">Accueil</button>
-                    <button onclick="router('developers')" class="nav-link text-slate-600 hover:text-emerald-600">Trouver un Dev</button>
-                    <button onclick="router('jobs')" class="nav-link text-slate-600 hover:text-emerald-600">Missions</button>
-                    <button onclick="router('pricing')" class="nav-link text-slate-600 hover:text-emerald-600">Tarifs</button>
+                    <button onclick="router('home')" class="nav-link text-slate-600 hover:text-emerald-600 transition">Accueil</button>
+                    <button onclick="router('developers')" class="nav-link text-slate-600 hover:text-emerald-600 transition">Trouver un Dev</button>
+                    <button onclick="router('jobs')" class="nav-link text-slate-600 hover:text-emerald-600 transition">Missions</button>
+                    <button onclick="router('pricing')" class="nav-link text-slate-600 hover:text-emerald-600 transition">Tarifs</button>
                 </div>
 
+                <!-- Bouton Connexion -->
                 <div class="hidden md:flex items-center space-x-4">
-                    <button onclick="router('login')" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-slate-900 rounded-md hover:bg-slate-800 transition-colors">
+                    <button onclick="router('login')" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-slate-900 rounded-md hover:bg-slate-800 transition-colors shadow-sm">
                         <i data-lucide="log-in" class="h-4 w-4"></i> Connexion
                     </button>
                 </div>
 
-                <!-- Mobile menu button -->
+                <!-- Bouton Menu Mobile -->
                 <div class="md:hidden flex items-center">
-                    <button onclick="toggleMobileMenu()" class="text-slate-500 hover:text-slate-900">
+                    <button onclick="toggleMobileMenu()" class="text-slate-500 hover:text-slate-900 p-2">
                         <i data-lucide="menu" class="h-6 w-6"></i>
                     </button>
                 </div>
             </div>
         </div>
-        <!-- Mobile Menu Panel -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 p-4 space-y-2">
-            <button onclick="router('home')" class="block w-full text-left px-4 py-2 text-slate-700 hover:bg-slate-50">Accueil</button>
-            <button onclick="router('developers')" class="block w-full text-left px-4 py-2 text-slate-700 hover:bg-slate-50">Développeurs</button>
-            <button onclick="router('jobs')" class="block w-full text-left px-4 py-2 text-slate-700 hover:bg-slate-50">Missions</button>
-            <button onclick="router('login')" class="block w-full text-left px-4 py-2 font-bold text-emerald-600">Connexion</button>
+        
+        <!-- Menu Mobile (Caché par défaut) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 p-4 space-y-2 shadow-lg">
+            <button onclick="router('home')" class="block w-full text-left px-4 py-3 text-slate-700 hover:bg-slate-50 rounded-lg">Accueil</button>
+            <button onclick="router('developers')" class="block w-full text-left px-4 py-3 text-slate-700 hover:bg-slate-50 rounded-lg">Développeurs</button>
+            <button onclick="router('jobs')" class="block w-full text-left px-4 py-3 text-slate-700 hover:bg-slate-50 rounded-lg">Missions</button>
+            <button onclick="router('pricing')" class="block w-full text-left px-4 py-3 text-slate-700 hover:bg-slate-50 rounded-lg">Tarifs</button>
+            <button onclick="router('login')" class="block w-full text-left px-4 py-3 font-bold text-emerald-600 bg-emerald-50 rounded-lg mt-2">Connexion</button>
         </div>
     </nav>
 
-    <!-- MAIN CONTENT -->
+    <!-- CONTENU PRINCIPAL -->
     <main id="app" class="flex-grow">
         
-        <!-- PAGE: HOME -->
+        <!-- === PAGE ACCUEIL === -->
         <section id="home" class="page-section active">
-            <!-- Hero -->
+            <!-- Hero Banner -->
             <div class="relative bg-slate-900 py-24 overflow-hidden">
                 <div class="absolute inset-0 bg-gradient-to-r from-slate-900 to-emerald-900 opacity-90"></div>
+                <!-- Image de fond -->
                 <div class="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1950&q=80')] bg-cover bg-center"></div>
                 
                 <div class="relative max-w-4xl mx-auto px-4 text-center">
-                    <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-6">
+                    <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-6 leading-tight">
                         Trouvez le freelance idéal au <span class="text-emerald-400">Gabon</span>
                     </h1>
-                    <p class="text-xl text-slate-300 mb-10">
-                        Développement Web, Mobile, Design... Plus de 500 talents gabonais prêts à travailler. Paiement sécurisé via Airtel/Wave.
+                    <p class="text-xl text-slate-300 mb-10 max-w-2xl mx-auto">
+                        Développement Web, Mobile, Design... Plus de 500 talents gabonais prêts à travailler. Paiement sécurisé via Airtel Money & Wave.
                     </p>
                     <div class="flex flex-col sm:flex-row justify-center gap-4">
-                        <button onclick="router('developers')" class="bg-emerald-500 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-emerald-600 transition-colors">
+                        <button onclick="router('developers')" class="bg-emerald-500 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-900/20">
                             Trouver un expert
                         </button>
                         <button onclick="router('jobs')" class="border border-white text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-white hover:text-slate-900 transition-colors">
@@ -103,124 +113,170 @@
                 </div>
             </div>
 
-            <!-- Categories -->
+            <!-- Catégories -->
             <div class="py-16 bg-white">
                 <div class="max-w-7xl mx-auto px-4">
                     <h2 class="text-3xl font-bold text-slate-900 mb-10 text-center">Catégories Populaires</h2>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        <div class="p-6 bg-slate-50 rounded-xl text-center hover:shadow-md transition cursor-pointer" onclick="router('developers')">
-                            <i data-lucide="code" class="h-10 w-10 text-indigo-500 mx-auto mb-3"></i>
-                            <h3 class="font-bold">Web Fullstack</h3>
+                        <!-- Carte Catégorie -->
+                        <div class="p-6 bg-slate-50 rounded-xl text-center hover:shadow-lg hover:-translate-y-1 transition duration-300 cursor-pointer border border-slate-100" onclick="router('developers')">
+                            <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i data-lucide="code" class="h-8 w-8 text-indigo-600"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-slate-800">Web Fullstack</h3>
                         </div>
-                        <div class="p-6 bg-slate-50 rounded-xl text-center hover:shadow-md transition cursor-pointer" onclick="router('developers')">
-                            <i data-lucide="smartphone" class="h-10 w-10 text-emerald-500 mx-auto mb-3"></i>
-                            <h3 class="font-bold">Mobile Apps</h3>
+                        <div class="p-6 bg-slate-50 rounded-xl text-center hover:shadow-lg hover:-translate-y-1 transition duration-300 cursor-pointer border border-slate-100" onclick="router('developers')">
+                            <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i data-lucide="smartphone" class="h-8 w-8 text-emerald-600"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-slate-800">Mobile Apps</h3>
                         </div>
-                        <div class="p-6 bg-slate-50 rounded-xl text-center hover:shadow-md transition cursor-pointer" onclick="router('developers')">
-                            <i data-lucide="shopping-cart" class="h-10 w-10 text-purple-500 mx-auto mb-3"></i>
-                            <h3 class="font-bold">E-commerce</h3>
+                        <div class="p-6 bg-slate-50 rounded-xl text-center hover:shadow-lg hover:-translate-y-1 transition duration-300 cursor-pointer border border-slate-100" onclick="router('developers')">
+                            <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i data-lucide="shopping-cart" class="h-8 w-8 text-purple-600"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-slate-800">E-commerce</h3>
                         </div>
-                        <div class="p-6 bg-slate-50 rounded-xl text-center hover:shadow-md transition cursor-pointer" onclick="router('developers')">
-                            <i data-lucide="palette" class="h-10 w-10 text-pink-500 mx-auto mb-3"></i>
-                            <h3 class="font-bold">Design UI/UX</h3>
+                        <div class="p-6 bg-slate-50 rounded-xl text-center hover:shadow-lg hover:-translate-y-1 transition duration-300 cursor-pointer border border-slate-100" onclick="router('developers')">
+                            <div class="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i data-lucide="palette" class="h-8 w-8 text-pink-600"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-slate-800">Design UI/UX</h3>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- PAGE: DEVELOPERS -->
+        <!-- === PAGE DÉVELOPPEURS === -->
         <section id="developers" class="page-section">
             <div class="py-12 px-4 max-w-7xl mx-auto">
-                <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Nos meilleurs talents</h2>
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-slate-900">Nos Meilleurs Talents</h2>
+                    <p class="text-slate-500 mt-2">Des profils vérifiés prêts à démarrer votre projet.</p>
+                </div>
+                
+                <!-- Filtres (Simplifiés) -->
+                <div class="mb-8 flex justify-center gap-2 overflow-x-auto pb-2">
+                    <button class="px-4 py-2 bg-slate-900 text-white rounded-full text-sm font-medium">Tous</button>
+                    <button class="px-4 py-2 bg-white border border-slate-200 text-slate-600 rounded-full text-sm font-medium hover:border-emerald-500">Web</button>
+                    <button class="px-4 py-2 bg-white border border-slate-200 text-slate-600 rounded-full text-sm font-medium hover:border-emerald-500">Mobile</button>
+                    <button class="px-4 py-2 bg-white border border-slate-200 text-slate-600 rounded-full text-sm font-medium hover:border-emerald-500">Design</button>
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="dev-grid">
-                    <!-- Devs injected via JS -->
+                    <!-- Les développeurs seront injectés ici par le JS -->
                 </div>
             </div>
         </section>
 
-        <!-- PAGE: JOBS -->
+        <!-- === PAGE MISSIONS === -->
         <section id="jobs" class="page-section">
             <div class="py-12 px-4 max-w-7xl mx-auto">
-                <div class="flex justify-between items-center mb-8">
-                    <h2 class="text-3xl font-bold text-slate-900">Dernières Missions</h2>
-                    <button onclick="alert('Connectez-vous pour publier')" class="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-bold">Publier un projet</button>
+                <div class="flex justify-between items-center mb-8 bg-emerald-50 p-6 rounded-xl border border-emerald-100">
+                    <div>
+                        <h2 class="text-2xl font-bold text-emerald-900">Dernières Missions</h2>
+                        <p class="text-emerald-700 text-sm">Postulez et gagnez de l'argent.</p>
+                    </div>
+                    <button onclick="alert('Connectez-vous pour publier')" class="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow hover:bg-emerald-700 transition">
+                        Publier un projet
+                    </button>
                 </div>
                 <div class="space-y-4" id="job-list">
-                    <!-- Jobs injected via JS -->
+                    <!-- Les jobs seront injectés ici par le JS -->
                 </div>
             </div>
         </section>
 
-        <!-- PAGE: PRICING -->
+        <!-- === PAGE TARIFS === -->
         <section id="pricing" class="page-section">
             <div class="py-20 px-4 max-w-7xl mx-auto text-center">
                 <h2 class="text-4xl font-bold text-slate-900 mb-4">Abonnements Freelance</h2>
-                <p class="text-slate-600 mb-12">Passez Pro pour décrocher plus de contrats.</p>
+                <p class="text-slate-600 mb-12 max-w-2xl mx-auto">Investissez dans votre carrière. Les abonnements Pro permettent d'accéder à plus de clients et d'afficher le badge "Vérifié".</p>
                 
-                <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto text-left">
                     <!-- Free -->
-                    <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
-                        <h3 class="text-xl font-bold">Standard</h3>
-                        <div class="text-4xl font-bold my-4">Gratuit</div>
-                        <ul class="space-y-3 text-sm text-left mb-8">
-                            <li class="flex gap-2"><i data-lucide="check" class="text-emerald-500 w-4 h-4"></i> Profil basique</li>
+                    <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
+                        <h3 class="text-xl font-bold text-slate-900">Standard</h3>
+                        <div class="text-4xl font-bold my-4 text-slate-900">Gratuit</div>
+                        <p class="text-sm text-slate-500 mb-6">Pour démarrer doucement.</p>
+                        <ul class="space-y-3 text-sm text-slate-600 mb-8">
+                            <li class="flex gap-2"><i data-lucide="check" class="text-emerald-500 w-4 h-4"></i> Profil public simple</li>
                             <li class="flex gap-2"><i data-lucide="check" class="text-emerald-500 w-4 h-4"></i> 3 candidatures / mois</li>
+                            <li class="flex gap-2"><i data-lucide="check" class="text-emerald-500 w-4 h-4"></i> Commission 15%</li>
                         </ul>
-                        <button class="w-full py-3 bg-slate-100 font-bold rounded-lg">Actuel</button>
+                        <button class="w-full py-3 bg-slate-100 font-bold rounded-lg text-slate-600 cursor-default">Votre Plan Actuel</button>
                     </div>
                     
                     <!-- Pro -->
-                    <div class="bg-white p-8 rounded-2xl border-2 border-emerald-500 shadow-xl relative transform scale-105">
-                        <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-emerald-600 text-white px-3 py-1 rounded-full text-xs font-bold">RECOMMANDÉ</div>
-                        <h3 class="text-xl font-bold flex items-center justify-center gap-2"><i data-lucide="crown" class="w-5 h-5 text-yellow-500"></i> Premium</h3>
-                        <div class="text-4xl font-bold my-4">5 000 <span class="text-sm font-normal text-slate-500">FCFA/mois</span></div>
-                        <ul class="space-y-3 text-sm text-left mb-8">
-                            <li class="flex gap-2"><i data-lucide="check" class="text-emerald-500 w-4 h-4"></i> Profil "Vérifié"</li>
+                    <div class="bg-white p-8 rounded-2xl border-2 border-emerald-500 shadow-xl relative transform scale-105 z-10">
+                        <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-emerald-600 text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">Recommandé</div>
+                        <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                            <i data-lucide="crown" class="w-5 h-5 text-yellow-500 fill-yellow-500"></i> Premium
+                        </h3>
+                        <div class="text-4xl font-bold my-4 text-slate-900">5 000 <span class="text-sm font-normal text-slate-500">FCFA/mois</span></div>
+                        <p class="text-sm text-slate-500 mb-6">Pour les freelances sérieux.</p>
+                        <ul class="space-y-3 text-sm text-slate-600 mb-8">
+                            <li class="flex gap-2"><i data-lucide="check" class="text-emerald-500 w-4 h-4"></i> <strong>Badge "Vérifié"</strong> <i data-lucide="shield-check" class="w-4 h-4 text-emerald-500"></i></li>
                             <li class="flex gap-2"><i data-lucide="check" class="text-emerald-500 w-4 h-4"></i> Candidatures illimitées</li>
-                            <li class="flex gap-2"><i data-lucide="check" class="text-emerald-500 w-4 h-4"></i> Commission réduite</li>
+                            <li class="flex gap-2"><i data-lucide="check" class="text-emerald-500 w-4 h-4"></i> Commission réduite (10%)</li>
+                            <li class="flex gap-2"><i data-lucide="check" class="text-emerald-500 w-4 h-4"></i> Support Prioritaire</li>
                         </ul>
-                        <button onclick="alert('Paiement via Airtel Money bientôt disponible')" class="w-full py-3 bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-700">Choisir</button>
+                        <button onclick="alert('Module de paiement Airtel/Wave en cours d\'intégration')" class="w-full py-3 bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-700 shadow-lg shadow-emerald-200 transition">
+                            Choisir ce plan
+                        </button>
                     </div>
 
                     <!-- Agency -->
-                    <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
-                        <h3 class="text-xl font-bold">Agence</h3>
-                        <div class="text-4xl font-bold my-4">15 000 <span class="text-sm font-normal text-slate-500">FCFA/mois</span></div>
-                        <ul class="space-y-3 text-sm text-left mb-8">
+                    <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
+                        <h3 class="text-xl font-bold text-slate-900">Agence</h3>
+                        <div class="text-4xl font-bold my-4 text-slate-900">15 000 <span class="text-sm font-normal text-slate-500">FCFA/mois</span></div>
+                        <p class="text-sm text-slate-500 mb-6">Pour les équipes.</p>
+                        <ul class="space-y-3 text-sm text-slate-600 mb-8">
                             <li class="flex gap-2"><i data-lucide="check" class="text-emerald-500 w-4 h-4"></i> Multi-comptes</li>
-                            <li class="flex gap-2"><i data-lucide="check" class="text-emerald-500 w-4 h-4"></i> Support dédié</li>
+                            <li class="flex gap-2"><i data-lucide="check" class="text-emerald-500 w-4 h-4"></i> Gestionnaire de compte</li>
+                            <li class="flex gap-2"><i data-lucide="check" class="text-emerald-500 w-4 h-4"></i> Commission 5%</li>
                         </ul>
-                        <button class="w-full py-3 bg-slate-900 text-white font-bold rounded-lg hover:bg-slate-800">Contacter</button>
+                        <button class="w-full py-3 bg-slate-900 text-white font-bold rounded-lg hover:bg-slate-800 transition">Contacter</button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- PAGE: LOGIN -->
+        <!-- === PAGE CONNEXION === -->
         <section id="login" class="page-section">
-            <div class="min-h-[60vh] flex items-center justify-center px-4">
+            <div class="min-h-[70vh] flex items-center justify-center px-4 bg-slate-50">
                 <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md border border-slate-100">
-                    <h2 class="text-2xl font-bold text-center mb-6">Connexion</h2>
+                    <div class="text-center mb-8">
+                        <div class="inline-block p-3 rounded-full bg-emerald-50 mb-4">
+                            <i data-lucide="user" class="h-8 w-8 text-emerald-600"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-slate-900">Bienvenue</h2>
+                        <p class="text-slate-500">Connectez-vous à GabonDev</p>
+                    </div>
+                    
                     <form onsubmit="event.preventDefault(); router('home'); alert('Connexion réussie (Simulation)');">
                         <div class="mb-4">
-                            <label class="block text-sm font-medium mb-1">Email</label>
-                            <input type="email" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="votre@email.com">
+                            <label class="block text-sm font-medium mb-1 text-slate-700">Email</label>
+                            <input type="email" class="w-full border border-slate-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition" placeholder="votre@email.com" required>
                         </div>
                         <div class="mb-6">
-                            <label class="block text-sm font-medium mb-1">Mot de passe</label>
-                            <input type="password" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="••••••••">
+                            <label class="block text-sm font-medium mb-1 text-slate-700">Mot de passe</label>
+                            <input type="password" class="w-full border border-slate-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition" placeholder="••••••••" required>
                         </div>
-                        <button type="submit" class="w-full bg-slate-900 text-white py-3 rounded-lg font-bold hover:bg-slate-800">Se connecter</button>
+                        <button type="submit" class="w-full bg-slate-900 text-white py-3 rounded-lg font-bold hover:bg-slate-800 transition shadow-lg">Se connecter</button>
                     </form>
-                    <p class="text-center mt-4 text-sm text-slate-500">Pas encore de compte ? <a href="#" class="text-emerald-600 font-bold">S'inscrire</a></p>
+                    
+                    <div class="mt-6 text-center">
+                        <p class="text-sm text-slate-500">Pas encore de compte ? <a href="#" onclick="alert('Inscription bientôt disponible')" class="text-emerald-600 font-bold hover:underline">Créer un compte</a></p>
+                    </div>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <!-- FOOTER -->
+    <!-- PIED DE PAGE -->
     <footer class="bg-slate-900 text-slate-300 py-12 border-t border-slate-800 mt-auto">
         <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-8">
             <div>
@@ -228,71 +284,79 @@
                     <i data-lucide="code-2" class="h-6 w-6 text-emerald-500"></i>
                     <span class="font-bold text-lg">GabonDev</span>
                 </div>
-                <p class="text-sm text-slate-500">La plateforme n°1 pour les développeurs au Gabon.</p>
+                <p class="text-sm text-slate-500 leading-relaxed">
+                    La première plateforme dédiée aux développeurs et créatifs numériques au Gabon.
+                </p>
             </div>
             <div>
-                <h4 class="text-white font-bold mb-4">Liens</h4>
+                <h4 class="text-white font-bold mb-4">Navigation</h4>
                 <ul class="space-y-2 text-sm">
-                    <li><a href="#" onclick="router('home')" class="hover:text-emerald-500">Accueil</a></li>
-                    <li><a href="#" onclick="router('jobs')" class="hover:text-emerald-500">Missions</a></li>
+                    <li><a href="#" onclick="router('home')" class="hover:text-emerald-500 transition">Accueil</a></li>
+                    <li><a href="#" onclick="router('developers')" class="hover:text-emerald-500 transition">Trouver un Dev</a></li>
+                    <li><a href="#" onclick="router('jobs')" class="hover:text-emerald-500 transition">Offres de mission</a></li>
                 </ul>
             </div>
             <div>
                 <h4 class="text-white font-bold mb-4">Légal</h4>
                 <ul class="space-y-2 text-sm">
-                    <li><a href="#" class="hover:text-emerald-500">CGU</a></li>
-                    <li><a href="#" class="hover:text-emerald-500">Confidentialité</a></li>
+                    <li><a href="#" class="hover:text-emerald-500 transition">Conditions Générales</a></li>
+                    <li><a href="#" class="hover:text-emerald-500 transition">Confidentialité</a></li>
                 </ul>
             </div>
             <div>
                 <h4 class="text-white font-bold mb-4">Contact</h4>
-                <p class="text-sm flex gap-2 items-center mb-2"><i data-lucide="map-pin" class="w-4 h-4"></i> Libreville, Gabon</p>
-                <p class="text-sm flex gap-2 items-center"><i data-lucide="mail" class="w-4 h-4"></i> contact@gabondev.ga</p>
+                <p class="text-sm flex gap-2 items-center mb-2"><i data-lucide="map-pin" class="w-4 h-4 text-emerald-500"></i> Libreville, Gabon</p>
+                <p class="text-sm flex gap-2 items-center"><i data-lucide="mail" class="w-4 h-4 text-emerald-500"></i> contact@gabondev.ga</p>
+                <p class="text-sm flex gap-2 items-center mt-2"><i data-lucide="phone" class="w-4 h-4 text-emerald-500"></i> +241 74 00 00 00</p>
             </div>
         </div>
-        <div class="text-center text-sm text-slate-600 mt-10 pt-4 border-t border-slate-800">
-            © 2025 GabonDev. Fait avec passion.
+        <div class="text-center text-sm text-slate-600 mt-10 pt-8 border-t border-slate-800">
+            © 2025 GabonDev. Fait avec passion à Libreville.
         </div>
     </footer>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- LOGIQUE JAVASCRIPT -->
     <script>
-        // MOCK DATA
+        // DONNÉES DE DÉMONSTRATION
         const developers = [
-            { name: "Jean-Marc O.", role: "Développeur Fullstack", rate: "15 000", skills: ["React", "Node.js", "PHP"], img: "https://i.pravatar.cc/150?u=1", verified: true },
-            { name: "Sarah B.", role: "Designer UI/UX", rate: "12 000", skills: ["Figma", "Webflow"], img: "https://i.pravatar.cc/150?u=5", verified: true },
-            { name: "Paul M.", role: "Dev Mobile Flutter", rate: "18 000", skills: ["Flutter", "Dart", "Firebase"], img: "https://i.pravatar.cc/150?u=3", verified: false },
-            { name: "Eric K.", role: "Expert WordPress", rate: "10 000", skills: ["WordPress", "Elementor"], img: "https://i.pravatar.cc/150?u=8", verified: true },
-            { name: "Marc A.", role: "Dev Backend Python", rate: "20 000", skills: ["Django", "Python", "SQL"], img: "https://i.pravatar.cc/150?u=12", verified: false },
+            { name: "Jean-Marc O.", role: "Développeur Fullstack", rate: "15 000", skills: ["React", "Node.js", "PHP"], img: "https://i.pravatar.cc/150?u=1", verified: true, available: true },
+            { name: "Sarah B.", role: "Designer UI/UX", rate: "12 000", skills: ["Figma", "Webflow"], img: "https://i.pravatar.cc/150?u=5", verified: true, available: false },
+            { name: "Paul M.", role: "Dev Mobile Flutter", rate: "18 000", skills: ["Flutter", "Dart", "Firebase"], img: "https://i.pravatar.cc/150?u=3", verified: false, available: true },
+            { name: "Eric K.", role: "Expert WordPress", rate: "10 000", skills: ["WordPress", "Elementor"], img: "https://i.pravatar.cc/150?u=8", verified: true, available: true },
+            { name: "Marc A.", role: "Dev Backend Python", rate: "20 000", skills: ["Django", "Python", "SQL"], img: "https://i.pravatar.cc/150?u=12", verified: false, available: true },
         ];
 
         const jobs = [
-            { title: "Création Site E-commerce", company: "Mode Gabon", budget: "500k - 1M FCFA", tags: ["WooCommerce", "PHP"], date: "Il y a 2j" },
-            { title: "App de Gestion Stock PME", company: "Logistique GA", budget: "800k - 1.5M FCFA", tags: ["React", "Node.js"], date: "Il y a 4h" },
-            { title: "Refonte Site Vitrine", company: "BTP Services", budget: "200k - 400k FCFA", tags: ["HTML/CSS", "SEO"], date: "Hier" },
+            { title: "Création Site E-commerce Mode", company: "Mode Gabon", budget: "500k - 1M FCFA", tags: ["WooCommerce", "PHP"], date: "Il y a 2j", location: "Libreville" },
+            { title: "App de Gestion Stock PME", company: "Logistique GA", budget: "800k - 1.5M FCFA", tags: ["React", "Node.js"], date: "Il y a 4h", location: "Port-Gentil" },
+            { title: "Refonte Site Vitrine BTP", company: "BTP Services", budget: "200k - 400k FCFA", tags: ["HTML/CSS", "SEO"], date: "Hier", location: "Franceville" },
+            { title: "Développeur Mobile Junior", company: "StartUp Africa", budget: "300k - 500k FCFA", tags: ["Flutter", "API"], date: "Il y a 3j", location: "Remote" },
         ];
 
-        // RENDER FUNCTIONS
+        // FONCTIONS D'AFFICHAGE
         function renderDevs() {
             const container = document.getElementById('dev-grid');
+            if(!container) return;
+            
             container.innerHTML = developers.map(dev => `
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-md transition">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-md transition dev-card relative overflow-hidden">
+                    ${dev.available ? '<div class="absolute top-4 right-4 w-3 h-3 bg-green-500 rounded-full border-2 border-white shadow-sm" title="Disponible"></div>' : ''}
                     <div class="flex items-center gap-4 mb-4">
-                        <img src="${dev.img}" class="w-14 h-14 rounded-full object-cover">
+                        <img src="${dev.img}" class="w-16 h-16 rounded-full object-cover border-2 border-white shadow-sm">
                         <div>
                             <h4 class="font-bold text-slate-900 flex items-center gap-1">
                                 ${dev.name} 
-                                ${dev.verified ? '<i data-lucide="shield-check" class="w-4 h-4 text-emerald-500 fill-emerald-100"></i>' : ''}
+                                ${dev.verified ? '<i data-lucide="shield-check" class="w-4 h-4 text-emerald-500 fill-emerald-50"></i>' : ''}
                             </h4>
-                            <p class="text-sm text-slate-500">${dev.role}</p>
+                            <p class="text-sm text-slate-500 font-medium">${dev.role}</p>
                         </div>
                     </div>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        ${dev.skills.map(s => `<span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded">${s}</span>`).join('')}
+                    <div class="flex flex-wrap gap-2 mb-5">
+                        ${dev.skills.map(s => `<span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-md border border-slate-200">${s}</span>`).join('')}
                     </div>
-                    <div class="flex justify-between items-center pt-3 border-t border-slate-100">
-                        <span class="font-bold">${dev.rate} FCFA<span class="text-xs font-normal">/h</span></span>
-                        <button class="text-emerald-600 text-sm font-bold hover:underline">Voir profil</button>
+                    <div class="flex justify-between items-center pt-4 border-t border-slate-100">
+                        <span class="font-bold text-slate-900">${dev.rate} FCFA<span class="text-xs font-normal text-slate-500">/h</span></span>
+                        <button class="text-emerald-600 text-sm font-bold hover:text-emerald-700 hover:underline transition">Voir profil</button>
                     </div>
                 </div>
             `).join('');
@@ -300,57 +364,71 @@
 
         function renderJobs() {
             const container = document.getElementById('job-list');
+            if(!container) return;
+
             container.innerHTML = jobs.map(job => `
-                <div class="bg-white rounded-lg p-6 shadow-sm border border-slate-200 hover:border-emerald-300 transition cursor-pointer">
-                    <div class="flex justify-between items-start">
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-200 hover:border-emerald-300 transition cursor-pointer group">
+                    <div class="flex flex-col md:flex-row justify-between items-start gap-4">
                         <div>
-                            <h3 class="text-lg font-bold text-emerald-700 mb-1">${job.title}</h3>
-                            <p class="text-slate-600 text-sm mb-3">${job.company} • ${job.date}</p>
+                            <h3 class="text-lg font-bold text-slate-900 group-hover:text-emerald-600 transition">${job.title}</h3>
+                            <div class="flex items-center gap-2 text-sm text-slate-500 mb-3 mt-1">
+                                <span class="font-semibold text-slate-700">${job.company}</span>
+                                <span>•</span>
+                                <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i> ${job.location}</span>
+                                <span>•</span>
+                                <span>${job.date}</span>
+                            </div>
                             <div class="flex gap-2">
                                 ${job.tags.map(t => `<span class="bg-emerald-50 text-emerald-700 border border-emerald-100 px-2 py-1 rounded text-xs font-medium">${t}</span>`).join('')}
                             </div>
                         </div>
-                        <div class="text-right">
-                            <div class="font-bold text-slate-900">${job.budget}</div>
-                            <button class="mt-2 bg-slate-900 text-white text-xs px-3 py-1.5 rounded hover:bg-slate-700">Postuler</button>
+                        <div class="text-left md:text-right mt-2 md:mt-0 flex flex-row md:flex-col items-center md:items-end justify-between w-full md:w-auto">
+                            <div class="font-bold text-slate-900 bg-slate-50 px-3 py-1 rounded-lg border border-slate-100">${job.budget}</div>
+                            <button class="mt-0 md:mt-3 bg-slate-900 text-white text-xs px-4 py-2 rounded-lg font-bold hover:bg-slate-800 transition shadow-sm">Postuler</button>
                         </div>
                     </div>
                 </div>
             `).join('');
         }
 
-        // ROUTER SYSTEM
+        // SYSTÈME DE ROUTAGE (Navigation sans rechargement)
         function router(pageId) {
-            // Hide all sections
+            // Cacher toutes les sections
             document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
             
-            // Show target section
+            // Afficher la section demandée
             const target = document.getElementById(pageId) || document.getElementById('home');
-            target.classList.add('active');
+            if(target) target.classList.add('active');
 
-            // Close mobile menu if open
+            // Mettre à jour les liens du menu
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+            // (Optionnel: ajouter la classe active au lien cliqué si besoin)
+
+            // Fermer le menu mobile
             document.getElementById('mobile-menu').classList.add('hidden');
             
-            // Scroll to top
+            // Remonter en haut de page
             window.scrollTo(0, 0);
 
-            // Re-initialize icons for new content
-            lucide.createIcons();
+            // Ré-initialiser les icônes (car le DOM a changé)
+            if(window.lucide) lucide.createIcons();
         }
 
         function toggleMobileMenu() {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
         }
 
-        // INIT
+        // INITIALISATION
         window.addEventListener('DOMContentLoaded', () => {
             renderDevs();
             renderJobs();
-            lucide.createIcons();
+            if(window.lucide) lucide.createIcons();
             
-            // Handle URL hash if present
-            /*const hash = window.location.hash.substring(1);
-            if(hash) router(hash);*/
+            // Gestion basique du bouton retour navigateur
+            /* window.onpopstate = function(event) {
+                // Logique pour gérer l'historique si on voulait pousser plus loin
+            }; */
         });
 
     </script>

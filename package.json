@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "Site Freelance GabonDev en HTML pur",
   "scripts": {
-    "build": "echo 'No build step required for static site'"
-  }
+    "build": "echo 'Site statique prêt'"
+  },
+  "dependencies": {},
+  "devDependencies": {}
 }

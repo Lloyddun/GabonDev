@@ -1,1 +1,1 @@
-// Ce fichier n'est plus nécessaire car nous utilisons du HTML pur pour la stabilité.
+// Fichier ignoré pour le mode statique

@@ -1,1 +1,1 @@
-// Ce fichier est désactivé. Tout le code est maintenant dans index.html.
+// Fichier ignoré pour le mode statique
