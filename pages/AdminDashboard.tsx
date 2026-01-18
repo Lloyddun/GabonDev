@@ -10,7 +10,7 @@ import { generateSupportReply } from '../services/geminiService';
 const AdminDashboard: React.FC = () => {
   const { 
       currentUser, role, developers, transactions, updateUserStatus, 
-      processKYC, sendNotification, logout 
+      processKYC, sendNotification, logout, navigate 
   } = useApp();
   
   const [activeTab, setActiveTab] = useState<'comptes' | 'historique' | 'solde' | 'kyc' | 'support' | 'notif'>('comptes');
@@ -28,14 +28,22 @@ const AdminDashboard: React.FC = () => {
   const [isAiThinking, setIsAiThinking] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
+  // Security Redirect: If not admin, go home immediately
+  useEffect(() => {
+    if (role !== 'admin' || !currentUser) {
+        navigate('/');
+    }
+  }, [role, currentUser, navigate]);
+
   useEffect(() => {
     if (chatContainerRef.current) {
         chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [chatHistory]);
 
+  // Prevent rendering if not admin (avoids flash of content)
   if (role !== 'admin' || !currentUser) {
-      return <div className="p-10 text-center font-bold text-red-600">ACCÈS INTERDIT</div>;
+      return null; 
   }
 
   // Derived Data
@@ -102,7 +110,7 @@ const AdminDashboard: React.FC = () => {
   return (
     <div className="flex h-screen bg-slate-100">
       {/* Sidebar */}
-      <div className="w-64 bg-slate-900 text-white flex flex-col">
+      <div className="w-64 bg-slate-900 text-white flex flex-col hidden md:flex">
         <div className="p-6 border-b border-slate-800">
             <h1 className="text-xl font-bold text-emerald-500">ESPACE ADMIN</h1>
             <p className="text-xs text-slate-400 mt-1">Secret Access</p>
@@ -138,13 +146,19 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto p-8">
+      <div className="flex-1 overflow-auto p-4 md:p-8">
+          
+          {/* Mobile Header */}
+          <div className="md:hidden flex justify-between items-center mb-6 bg-white p-4 rounded-lg shadow-sm">
+             <span className="font-bold">Admin Panel</span>
+             <button onClick={logout} className="text-red-500"><LogOut className="h-5 w-5" /></button>
+          </div>
           
           {/* TAB: COMPTES */}
           {activeTab === 'comptes' && (
               <div>
                   <h2 className="text-2xl font-bold text-slate-800 mb-6">Gestion des Comptes Développeurs</h2>
-                  <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+                  <div className="bg-white rounded-xl shadow-sm overflow-hidden overflow-x-auto">
                       <table className="w-full text-left">
                           <thead className="bg-slate-50 border-b border-slate-200">
                               <tr>
@@ -193,7 +207,7 @@ const AdminDashboard: React.FC = () => {
           {activeTab === 'historique' && (
               <div>
                   <h2 className="text-2xl font-bold text-slate-800 mb-6">Historique des Transactions</h2>
-                  <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+                  <div className="bg-white rounded-xl shadow-sm overflow-hidden overflow-x-auto">
                       <table className="w-full text-left">
                           <thead className="bg-slate-50 border-b border-slate-200">
                               <tr>
@@ -287,24 +301,24 @@ const AdminDashboard: React.FC = () => {
                                       <div><span className="text-slate-500 text-sm">Type Document :</span> <p className="font-bold">{selectedUserKYC.kycDocType}</p></div>
                                   </div>
                                   
-                                  <div className="pt-6 flex gap-4">
+                                  <div className="pt-6 flex flex-col md:flex-row gap-4">
                                       <button 
                                         onClick={() => { processKYC(selectedUserKYC.id, 'approve'); setSelectedUserKYC(null); }}
-                                        className="bg-emerald-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-emerald-700 flex items-center gap-2"
+                                        className="bg-emerald-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-emerald-700 flex items-center gap-2 justify-center"
                                       >
                                           <Check className="h-5 w-5" /> Valider KYC
                                       </button>
                                       <button 
                                         onClick={() => { processKYC(selectedUserKYC.id, 'reject'); setSelectedUserKYC(null); }}
-                                        className="bg-red-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-red-700 flex items-center gap-2"
+                                        className="bg-red-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-red-700 flex items-center gap-2 justify-center"
                                       >
                                           <X className="h-5 w-5" /> Refuser
                                       </button>
                                       <button 
                                         onClick={() => handleDownloadKYC(selectedUserKYC)}
-                                        className="border border-slate-300 text-slate-700 px-6 py-3 rounded-lg font-bold hover:bg-slate-50 flex items-center gap-2"
+                                        className="border border-slate-300 text-slate-700 px-6 py-3 rounded-lg font-bold hover:bg-slate-50 flex items-center gap-2 justify-center"
                                       >
-                                          <Download className="h-5 w-5" /> Rapport Police
+                                          <Download className="h-5 w-5" /> Rapport
                                       </button>
                                   </div>
                               </div>
@@ -330,7 +344,7 @@ const AdminDashboard: React.FC = () => {
                           </div>
                       </div>
                   ) : (
-                      <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+                      <div className="bg-white rounded-xl shadow-sm overflow-hidden overflow-x-auto">
                           {pendingKYC.length === 0 ? (
                               <div className="p-8 text-center text-slate-500">Aucune demande en attente.</div>
                           ) : (
@@ -385,9 +399,9 @@ const AdminDashboard: React.FC = () => {
                       </div>
                   </h2>
                   
-                  <div className="flex flex-1 gap-6 min-h-0">
+                  <div className="flex flex-col md:flex-row gap-6 min-h-0">
                       {/* Left: Console / Simulation */}
-                      <div className="flex-1 bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col overflow-hidden">
+                      <div className="flex-1 bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col overflow-hidden h-[500px] md:h-auto">
                           <div className="p-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
                               <h3 className="font-bold text-slate-700">Console de Simulation (Live)</h3>
                               <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Testez Sarah (IA)</span>
@@ -436,7 +450,7 @@ const AdminDashboard: React.FC = () => {
                       </div>
 
                       {/* Right: Info Panel */}
-                      <div className="w-80 space-y-4">
+                      <div className="md:w-80 w-full space-y-4">
                           <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
                               <h3 className="font-bold text-slate-800 mb-2">Statut Support</h3>
                               <div className="flex items-center gap-2 mb-2">

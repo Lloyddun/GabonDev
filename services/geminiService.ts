@@ -1,7 +1,11 @@
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { AIJobProposal } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// FIX: Prevent crash if process is undefined in browser environment
+// You must set the API key directly here for the demo to work on Vercel without build steps
+// or ensure your build process injects it.
+const API_KEY = "AIzaSy..."; // Remplacez ceci par votre vraie clé si process.env ne fonctionne pas
+const ai = new GoogleGenAI({ apiKey: (typeof process !== 'undefined' && process.env && process.env.API_KEY) || API_KEY });
 
 const jobSchema: Schema = {
   type: Type.OBJECT,
@@ -26,7 +30,7 @@ const jobSchema: Schema = {
 export const generateJobDescription = async (userInput: string): Promise<AIJobProposal> => {
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: "gemini-1.5-flash", // Utilisation d'un modèle stable
       contents: `You are an expert IT Project Manager in Gabon. 
       Help a client draft a job posting for a developer based on their rough idea.
       The language MUST be French.
@@ -45,14 +49,19 @@ export const generateJobDescription = async (userInput: string): Promise<AIJobPr
     throw new Error("No response text generated");
   } catch (error) {
     console.error("Gemini API Error:", error);
-    throw error;
+    // Return a fallback to prevent app crash
+    return {
+        title: "Projet de développement",
+        description: "Description générée automatiquement indisponible. Veuillez détailler votre besoin.",
+        skills: ["Général"]
+    };
   }
 };
 
 export const generateSupportReply = async (userMessage: string, history: string[]): Promise<{ text: string; needsHuman: boolean }> => {
     try {
         const response = await ai.models.generateContent({
-            model: "gemini-3-flash-preview",
+            model: "gemini-1.5-flash",
             contents: `User message: "${userMessage}"`,
             config: {
                 systemInstruction: `Tu es Sarah, l'agent de support IA de la plateforme GabonDev.
