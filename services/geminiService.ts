@@ -1,11 +1,12 @@
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { AIJobProposal } from "../types";
 
-// FIX: Prevent crash if process is undefined in browser environment
-// You must set the API key directly here for the demo to work on Vercel without build steps
-// or ensure your build process injects it.
-const API_KEY = "AIzaSy..."; // Remplacez ceci par votre vraie clé si process.env ne fonctionne pas
-const ai = new GoogleGenAI({ apiKey: (typeof process !== 'undefined' && process.env && process.env.API_KEY) || API_KEY });
+// Utilisation de la clé API fournie dans la configuration Firebase pour assurer le fonctionnement immédiat
+// sur Vercel sans configuration d'environnement complexe.
+const API_KEY = "AIzaSyDqlrTNGgGZs5iWAibsi9gGGOsXkcZ-K1s"; 
+
+// Initialisation sécurisée qui fonctionne même si process n'est pas défini (navigateur)
+const ai = new GoogleGenAI({ apiKey: API_KEY });
 
 const jobSchema: Schema = {
   type: Type.OBJECT,
@@ -30,7 +31,7 @@ const jobSchema: Schema = {
 export const generateJobDescription = async (userInput: string): Promise<AIJobProposal> => {
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-1.5-flash", // Utilisation d'un modèle stable
+      model: "gemini-1.5-flash", 
       contents: `You are an expert IT Project Manager in Gabon. 
       Help a client draft a job posting for a developer based on their rough idea.
       The language MUST be French.
