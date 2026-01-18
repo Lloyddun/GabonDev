@@ -1,0 +1,7 @@
+{
+  "name": "GabonDev",
+  "description": "La première plateforme de freelance pour les développeurs au Gabon. Trouvez des talents locaux ou postez vos projets web et mobile.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
